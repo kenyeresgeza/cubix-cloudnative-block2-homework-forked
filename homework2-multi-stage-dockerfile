@@ -1,0 +1,25 @@
+# Build stage
+FROM quay.io/drsylent/cubix/block2/homework-base:java17 AS builder
+
+LABEL cubix.homework.owner="Kenyeres_Geza"
+ENV CUBIX_HOMEWORK=Kenyeres_Geza
+ENV APP_DEFAULT_MESSAGE=""
+
+RUN mkdir -p /opt/build
+WORKDIR /opt/build
+
+ARG PROJECT_DIR
+RUN echo "Building: ${PROJECT_DIR}"
+
+COPY . /opt/build/
+
+# Package stage
+FROM eclipse-temurin:17-jre
+RUN mkdir /opt/app && chown 1001 -R /opt/app
+USER 1001
+
+ARG PROJECT_DIR
+WORKDIR /opt/app
+
+COPY --chown=1001 --from=builder /opt/build/${PROJECT_DIR}/target/*.jar app.jar
+CMD ["java", "-jar", "app.jar"]
