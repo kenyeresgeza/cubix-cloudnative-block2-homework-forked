@@ -4,11 +4,8 @@ services:
 
   backend-app:
     image: beapp:v1.0.0
-    container_name: backend-app
     ports:
       - "8082:8080"
-    networks:
-      - homework-2-network
     labels:
       - cubix.homework.owner="Kenyeres Géza"
     environment:
@@ -17,20 +14,13 @@ services:
 
   frontend-app:
     image: feapp:v1.0.0
-    container_name: frontend-app
     depends_on:
       - backend-app
     ports:
       - 8081:8080
-    networks:
-      - homework-2-network
     labels:
       - cubix.homework.owner="Kenyeres Géza"
     environment:
       - CUBIX_HOMEWORK=${HOMEWORK_OWNER}
       - APP_DEFAULT_MESSAGE=${DEFAULT_MESSAGE}
       - BACK_URL=${BACKEND_URL}
-
-networks:
-  homework-2-network:
-
